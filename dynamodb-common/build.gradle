@@ -1,0 +1,4 @@
+dependencies {
+    compileOnly 'com.amazonaws:aws-java-sdk-dynamodb:1.11.419'
+    testCompile 'com.amazonaws:aws-java-sdk-dynamodb:1.11.419'
+}

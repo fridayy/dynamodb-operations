@@ -1,0 +1,5 @@
+dependencies {
+    compile 'commons-io:commons-io:2.6'
+    compile 'commons-codec:commons-codec:1.11'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
+}

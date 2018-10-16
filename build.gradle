@@ -1,0 +1,40 @@
+group 'one.leftshift'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        // The next repo is only needed while using SNAPSHOT versions
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:2.5.4"
+    }
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'net.saliman.cobertura'
+
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    if (it.name != "dynamodb-common") {
+        dependencies {
+            compile project(':dynamodb-common')
+            compile 'com.amazonaws:aws-java-sdk-dynamodb:1.11.419'
+            compile 'org.slf4j:slf4j-api:1.8.0-beta2'
+            compile 'org.slf4j:slf4j-simple:1.8.0-beta2'
+        }
+    }
+
+    dependencies {
+        testCompile 'org.spockframework:spock-core:1.2-groovy-2.5'
+    }
+
+}
