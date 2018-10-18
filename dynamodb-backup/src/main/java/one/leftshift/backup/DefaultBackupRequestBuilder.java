@@ -15,21 +15,23 @@ class DefaultBackupRequestBuilder implements BackupRequest.Builder {
 
     @Override
     public BackupRequest.Builder tableName(String tableName) {
-        Objects.requireNonNull(tableName, "tableName can not be null");
+        ObjectUtil.assertNotNull("tableName can not be null", tableName);
         this.tableName = tableName;
         return this;
     }
 
     @Override
     public BackupRequest.Builder backupDestination(BackupDestination backupDestination) {
-        Objects.requireNonNull(backupDestination, "backupDestination can not be null");
+        ObjectUtil.assertNotNull("destination can not be null", backupDestination);
         this.backupDestination = backupDestination;
         return this;
     }
 
     @Override
     public BackupRequest build() {
-        ObjectUtil.assertNotNull("tableName and destination must be set", tableName, backupDestination);
+        if (Objects.isNull(tableName) || Objects.isNull(backupDestination)) {
+            throw new IllegalStateException("tableName and destination are required.");
+        }
         return new DefaultBackupRequest(this);
     }
 }
