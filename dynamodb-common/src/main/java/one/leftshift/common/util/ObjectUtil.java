@@ -11,6 +11,10 @@ import java.util.stream.Stream;
  */
 public final class ObjectUtil {
 
+    private ObjectUtil() {
+        throw new UnsupportedOperationException();
+    }
+
     public static void assertNotNull(String message, Object... objects) {
         if (hasNull(objects)) {
             throw new IllegalArgumentException(message);

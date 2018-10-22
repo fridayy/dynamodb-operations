@@ -1,8 +1,6 @@
 package one.leftshift.backup.service.task;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import one.leftshift.backup.BackupRequest;
 import one.leftshift.backup.repository.SynchronousDynamoDBRepository;
 import one.leftshift.common.repository.DynamoDBRepository;
 import org.apache.commons.io.IOUtils;
@@ -20,20 +18,22 @@ import java.util.Map;
  */
 public class DefaultBackupTask implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultBackupTask.class);
-    private final BackupRequest request;
+
+    private final TableBackupRequest backupRequest;
     private final DynamoDBRepository<Map<String, Object>> repository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public DefaultBackupTask(BackupRequest request, AmazonDynamoDB dynamoDBClient) {
-        this.request = request;
-        this.repository = new SynchronousDynamoDBRepository(dynamoDBClient, request.tableName());
+    public DefaultBackupTask(TableBackupRequest backupRequest) {
+        this.backupRequest = backupRequest;
+        this.repository = new SynchronousDynamoDBRepository(backupRequest.getDynamoDBClient(), backupRequest.getTableName());
     }
 
 
     @Override
     public void run() {
         try {
-            IOUtils.write(this.objectMapper.writeValueAsBytes(this.repository.findAll()), new FileOutputStream(new File(this.request.backupDestination().getPath())));
+            IOUtils.write(this.objectMapper.writeValueAsBytes(this.repository.findAll()),
+                    new FileOutputStream(new File(this.backupRequest.getInitialRequest().backupDestination().getPath())));
         } catch (IOException e) {
             LOGGER.error("Could not write to file", e);
         }

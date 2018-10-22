@@ -36,7 +36,7 @@ public class SynchronousDynamoDBRepository implements DynamoDBRepository<Map<Str
                     .stream()
                     .map(AttributeValueMapper::map).collect(Collectors.toList());
         } catch (ResourceNotFoundException e) {
-            LOGGER.error("Invalid tableName: " + tableName, e);
+            LOGGER.error("Invalid tableNames: " + tableName, e);
         }
         return Collections.emptyList();
     }

@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 class StringMapperTest extends AbstractAttributeValueMapperChainTest {
     @Override
     AttributeValueMaperChain<Object> ClassUnderTest(AttributeValueMaperChain<Object> next) {
-        return null
+        return new StringMapper(next)
     }
 
     @Override

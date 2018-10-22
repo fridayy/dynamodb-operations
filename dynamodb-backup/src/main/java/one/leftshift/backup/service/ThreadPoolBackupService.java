@@ -3,9 +3,9 @@ package one.leftshift.backup.service;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import one.leftshift.backup.BackupRequest;
 import one.leftshift.backup.service.task.DefaultBackupTask;
+import one.leftshift.backup.service.task.TableBackupRequest;
 import one.leftshift.common.concurrent.AbstractThreadPoolService;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
  * @since 1.0.0
  */
 public class ThreadPoolBackupService extends AbstractThreadPoolService implements BackupService {
+
     private final AmazonDynamoDB dynamoDBClient;
 
     public ThreadPoolBackupService(AmazonDynamoDB dynamoDBClient, ExecutorService executorService) {
@@ -28,8 +29,14 @@ public class ThreadPoolBackupService extends AbstractThreadPoolService implement
 
 
     @Override
-    public void backup(List<BackupRequest> backupRequests) {
-        backupRequests.forEach(request -> this.executorService.submit(new DefaultBackupTask(request, dynamoDBClient)));
+    public void backup(BackupRequest request) {
+        request.tableNames().forEach(tableName -> this.executorService.submit(
+                new DefaultBackupTask(TableBackupRequest.builder()
+                        .dynamoDBClient(this.dynamoDBClient)
+                        .initialRequest(request)
+                        .tableName(tableName)
+                        .withPreprocessors(request.preprocessors()).build())
+        ));
         this.gracefullyShutdownThreadPool();
     }
 }
