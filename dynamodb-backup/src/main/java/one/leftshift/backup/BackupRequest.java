@@ -1,10 +1,10 @@
 package one.leftshift.backup;
 
-import one.leftshift.backup.preprocessor.BackupPreprocessor;
-
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 /**
  * @author benjamin.krenn@leftshift.one - 10/16/18.
@@ -16,7 +16,7 @@ public interface BackupRequest {
 
     BackupDestination backupDestination();
 
-    List<BackupPreprocessor> preprocessors();
+    List<UnaryOperator<Map<String,Object>>> preprocessors();
 
     static Builder builder() {
         return new DefaultBackupRequestBuilder();
@@ -32,7 +32,7 @@ public interface BackupRequest {
 
         Builder backupDestination(BackupDestination backupDestination);
 
-        Builder addPreprocessor(BackupPreprocessor preprocessor);
+        Builder addPreprocessor(UnaryOperator<Map<String,Object>> preprocessor);
 
         BackupRequest build();
     }

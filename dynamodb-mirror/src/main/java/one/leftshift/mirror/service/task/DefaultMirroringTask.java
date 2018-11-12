@@ -10,6 +10,8 @@ import com.amazonaws.waiters.WaiterParameters;
 import com.amazonaws.waiters.WaiterTimedOutException;
 import com.amazonaws.waiters.WaiterUnrecoverableException;
 import one.leftshift.mirror.service.adapter.CreateTableRequestAdapter;
+import one.leftshift.mirror.service.task.exception.TableCreationFailureException;
+import one.leftshift.mirror.service.task.exception.UndeterminableStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultMirroringTask implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMirroringTask.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultMirroringTask.class);
     private final MirroringContext context;
 
     public DefaultMirroringTask(MirroringContext context) {
@@ -30,7 +32,7 @@ public class DefaultMirroringTask implements Runnable {
     public void run() {
         final AmazonDynamoDB fromClient = createClient(this.context.getFrom());
         final AmazonDynamoDB toClient = createClient(this.context.getTo());
-        LOGGER.info("mirroring {} from {} to {}", this.context.getTableName(), this.context.getFrom().getName(), this.context.getTo().getName());
+        log.info("mirroring {} from {} to {}", this.context.getTableName(), this.context.getFrom().getName(), this.context.getTo().getName());
 
         DescribeTableResult fromTable = describeSourceTable(fromClient);
         deleteTargetTableIfExists(toClient);
@@ -43,7 +45,7 @@ public class DefaultMirroringTask implements Runnable {
         try {
             return fromClient.describeTable(this.context.getTableName());
         } catch (ResourceNotFoundException e) {
-            LOGGER.error("table {} does exist in region {}", this.context.getTableName(), this.context.getFrom().getName());
+            log.error("table {} does exist in region {}", this.context.getTableName(), this.context.getFrom().getName());
             throw new IllegalArgumentException(this.context.getTableName() + "does not exist on " + this.context.getFrom().getName());
         }
     }
@@ -52,8 +54,8 @@ public class DefaultMirroringTask implements Runnable {
         try {
             toClient.createTable(new CreateTableRequestAdapter(fromTable));
         } catch (Exception e) {
-            LOGGER.error("could not create " + this.context.getTableName(), e);
-            throw new RuntimeException(e);
+            log.error("could not create " + this.context.getTableName(), e);
+            throw new TableCreationFailureException(e);
         }
     }
 
@@ -65,10 +67,10 @@ public class DefaultMirroringTask implements Runnable {
         Waiter<DescribeTableRequest> waiter = toClient.waiters().tableExists();
         try {
             waiter.run(new WaiterParameters<>(new DescribeTableRequest(this.context.getTableName())));
-            LOGGER.info("{} successfully created in region {}", this.context.getTableName(), this.context.getTo().getName());
+            log.info("{} successfully created in region {}", this.context.getTableName(), this.context.getTo().getName());
         } catch (WaiterUnrecoverableException | WaiterTimedOutException | AmazonServiceException e) {
-            LOGGER.error("Could not determine if table " + this.context.getTableName() + " has been created.", e);
-            throw new RuntimeException(e);
+            log.error("Could not determine if table " + this.context.getTableName() + " has been created.", e);
+            throw new UndeterminableStateException(e);
         }
     }
 
@@ -80,22 +82,23 @@ public class DefaultMirroringTask implements Runnable {
         Waiter<DescribeTableRequest> waiter = toClient.waiters().tableNotExists();
         try {
             waiter.run(new WaiterParameters<>(new DescribeTableRequest(this.context.getTableName())));
-            LOGGER.info("{} successfully deleted in region {}", this.context.getTableName(), this.context.getTo().getName());
+            log.info("{} successfully deleted in region {}", this.context.getTableName(), this.context.getTo().getName());
         } catch (WaiterUnrecoverableException | WaiterTimedOutException | AmazonServiceException e) {
-            LOGGER.error("Could not determine if table " + this.context.getTableName() + " exists.", e);
-            throw new RuntimeException(e);
+            log.error("Could not determine if table " + this.context.getTableName() + " exists.", e);
+            throw new UndeterminableStateException(e);
+
         }
     }
 
     private void deleteTargetTableIfExists(AmazonDynamoDB toClient) {
         try {
             toClient.deleteTable(this.context.getTableName());
-            LOGGER.info("Deleting {} on {}.", this.context.getTableName(), this.context.getTo().getName());
+            log.info("Deleting {} on {}.", this.context.getTableName(), this.context.getTo().getName());
         } catch (ResourceNotFoundException e) {
-            LOGGER.info("{} does not exists. Skipping deletion.", this.context.getTableName());
+            log.info("{} does not exists. Skipping deletion.", this.context.getTableName());
         } catch (ResourceInUseException | LimitExceededException e) {
-            LOGGER.error("could not delete " + this.context.getTableName(), e);
-            throw new RuntimeException(e);
+            log.error("could not delete " + this.context.getTableName(), e);
+            throw new UndeterminableStateException(e);
         }
     }
 

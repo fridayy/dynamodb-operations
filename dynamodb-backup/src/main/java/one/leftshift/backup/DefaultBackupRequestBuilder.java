@@ -1,9 +1,9 @@
 package one.leftshift.backup;
 
-import one.leftshift.backup.preprocessor.BackupPreprocessor;
 import one.leftshift.common.util.ObjectUtil;
 
 import java.util.*;
+import java.util.function.UnaryOperator;
 
 /**
  * @author benjamin.krenn@leftshift.one - 10/16/18.
@@ -12,12 +12,12 @@ import java.util.*;
 class DefaultBackupRequestBuilder implements BackupRequest.Builder {
 
     Set<String> tableNames = new HashSet<>();
-    List<BackupPreprocessor> preprocessors = new ArrayList<>();
+    List<UnaryOperator<Map<String,Object>>> preprocessors = new ArrayList<>();
     BackupDestination backupDestination;
 
     @Override
     public BackupRequest.Builder addTable(String tableName) {
-        ObjectUtil.assertNotNull("tableNames can not be null", tableName);
+        ObjectUtil.assertNotNull("tableName can not be null", tableName);
         this.tableNames.add(tableName);
         return this;
     }
@@ -44,7 +44,7 @@ class DefaultBackupRequestBuilder implements BackupRequest.Builder {
     }
 
     @Override
-    public BackupRequest.Builder addPreprocessor(BackupPreprocessor preprocessor) {
+    public BackupRequest.Builder addPreprocessor(UnaryOperator<Map<String,Object>> preprocessor) {
         ObjectUtil.assertNotNull("preprocessor can not be null", preprocessor);
         this.preprocessors.add(preprocessor);
         return this;

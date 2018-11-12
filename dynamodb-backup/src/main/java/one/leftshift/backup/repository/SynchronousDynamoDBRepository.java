@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class SynchronousDynamoDBRepository implements DynamoDBRepository<Map<String, Object>> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SynchronousDynamoDBRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(SynchronousDynamoDBRepository.class);
     private final AmazonDynamoDB syncDynamoDbClient;
     private final String tableName;
 
@@ -36,7 +36,7 @@ public class SynchronousDynamoDBRepository implements DynamoDBRepository<Map<Str
                     .stream()
                     .map(AttributeValueMapper::map).collect(Collectors.toList());
         } catch (ResourceNotFoundException e) {
-            LOGGER.error("Invalid tableNames: " + tableName, e);
+            log.error("Invalid tableNames: " + tableName, e);
         }
         return Collections.emptyList();
     }

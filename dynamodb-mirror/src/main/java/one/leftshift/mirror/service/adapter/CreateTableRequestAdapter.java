@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * TODO: null safety!!!
  * @author benjamin.krenn@leftshift.one - 10/17/18.
  * @since 1.0.0
  */
