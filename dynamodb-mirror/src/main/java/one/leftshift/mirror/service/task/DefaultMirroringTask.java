@@ -1,16 +1,15 @@
 package one.leftshift.mirror.service.task;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.waiters.Waiter;
 import com.amazonaws.waiters.WaiterParameters;
 import com.amazonaws.waiters.WaiterTimedOutException;
 import com.amazonaws.waiters.WaiterUnrecoverableException;
-import one.leftshift.mirror.service.adapter.CreateTableRequestAdapter;
-import one.leftshift.mirror.service.task.exception.TableCreationFailureException;
+import one.leftshift.common.dynamodb.AmazonDynamoDBFactory;
+import one.leftshift.common.dynamodb.adapter.CreateTableRequestAdapter;
+import one.leftshift.common.dynamodb.exception.TableCreationFailureException;
 import one.leftshift.mirror.service.task.exception.UndeterminableStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +29,8 @@ public class DefaultMirroringTask implements Runnable {
 
     @Override
     public void run() {
-        final AmazonDynamoDB fromClient = createClient(this.context.getFrom());
-        final AmazonDynamoDB toClient = createClient(this.context.getTo());
+        final AmazonDynamoDB fromClient = AmazonDynamoDBFactory.synchronous(this.context.getFrom());
+        final AmazonDynamoDB toClient = AmazonDynamoDBFactory.synchronous(this.context.getTo());
         log.info("mirroring {} from {} to {}", this.context.getTableName(), this.context.getFrom().getName(), this.context.getTo().getName());
 
         DescribeTableResult fromTable = describeSourceTable(fromClient);
@@ -100,9 +99,5 @@ public class DefaultMirroringTask implements Runnable {
             log.error("could not delete " + this.context.getTableName(), e);
             throw new UndeterminableStateException(e);
         }
-    }
-
-    private static AmazonDynamoDB createClient(Regions region) {
-        return AmazonDynamoDBClientBuilder.standard().withRegion(region).build();
     }
 }

@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException
 import com.amazonaws.services.dynamodbv2.model.ScanResult
+import one.leftshift.common.dynamodb.repository.SynchronousDynamoDBRepository
 import spock.lang.Specification
 import spock.lang.Subject
 

@@ -1,9 +1,9 @@
 package one.leftshift.backup.service.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import one.leftshift.backup.repository.SynchronousDynamoDBRepository;
+import one.leftshift.common.dynamodb.repository.SynchronousDynamoDBRepository;
 import one.leftshift.common.functional.Functions;
-import one.leftshift.common.repository.DynamoDBRepository;
+import one.leftshift.common.dynamodb.repository.DynamoDBRepository;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

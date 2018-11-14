@@ -1,4 +1,6 @@
-package one.leftshift.common.repository;
+package one.leftshift.common.dynamodb.repository;
+
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 
 import java.util.Collection;
 
@@ -9,5 +11,9 @@ import java.util.Collection;
 public interface DynamoDBRepository<T> {
 
     Collection<T> findAll();
+
+    void delete();
+
+    DescribeTableResult describe();
 
 }

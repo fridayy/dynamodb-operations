@@ -1,4 +1,4 @@
-package one.leftshift.mirror.service.task.exception;
+package one.leftshift.common.dynamodb.exception;
 
 /**
  * @author benjamin.krenn@leftshift.one - 11/12/18.

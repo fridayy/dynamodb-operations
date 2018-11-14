@@ -1,4 +1,4 @@
-package one.leftshift.mirror.service.adapter;
+package one.leftshift.common.dynamodb.adapter;
 
 import com.amazonaws.services.dynamodbv2.model.*;
 
