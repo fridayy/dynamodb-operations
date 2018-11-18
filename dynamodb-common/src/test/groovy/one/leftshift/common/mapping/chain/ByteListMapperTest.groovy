@@ -27,10 +27,17 @@ class ByteListMapperTest extends AbstractAttributeValueMapperChainTest {
     }
 
     @Override
-    List<Tuple2<AttributeValue, Object>> HandleableTypes() {
+    List<Tuple2<AttributeValue, Object>> HandleableAttributeValueTypes() {
         return [
                 new Tuple2<AttributeValue, Object>(new AttributeValue().withBS([ByteBuffer.wrap("a".bytes), ByteBuffer.wrap("b".bytes)]), ["YQ==", "Yg=="]),
                 new Tuple2<AttributeValue, Object>(new AttributeValue().withBS([ByteBuffer.wrap("a".bytes)]), ["YQ=="])
+        ]
+    }
+
+    @Override
+    List<Tuple2<Object, AttributeValue>> HandleableObjectTypes() {
+        return [
+                new Tuple2<Object, AttributeValue>(null, null)
         ]
     }
 }

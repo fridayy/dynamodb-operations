@@ -19,14 +19,14 @@ class AttributeValueMapperTest extends Specification {
                             "string_list_field": new AttributeValue().withSS("first", "second", "third"),
                             "number_list_field": new AttributeValue().withNS("1", "2", "3"),
                             "byte_list_field"  : new AttributeValue().withBS(ByteBuffer.wrap("firstBuffer".bytes), ByteBuffer.wrap("secondBuffer".bytes)),
-                            "map"              : new AttributeValue().withM(["Name": new AttributeValue().withS("John")]),
+                            "toMap"              : new AttributeValue().withM(["Name": new AttributeValue().withS("John")]),
                             "list"             : new AttributeValue().withL(new AttributeValue().withS("something"), new AttributeValue().withN("23.5"), new AttributeValue().withBOOL(false)),
                             "nested"           : new AttributeValue().withM(["first": new AttributeValue().withM(["a": new AttributeValue().withS("b")])]),
                             "nested_list"      : new AttributeValue().withL(new AttributeValue().withL(new AttributeValue().withS("hi")))
 
                     ]
         when:
-            def result = AttributeValueMapper.map(attributeValueMap)
+            def result = AttributeValueMapper.toMap(attributeValueMap)
         then:
             result == Expectation()
     }
@@ -41,7 +41,7 @@ class AttributeValueMapperTest extends Specification {
                 "string_list_field": ["first", "second", "third"],
                 "number_list_field": ["1", "2", "3"],
                 "byte_list_field"  : [encodeBase64String("firstBuffer".bytes), encodeBase64String("secondBuffer".bytes)],
-                "map"              : ["Name": "John"],
+                "toMap"              : ["Name": "John"],
                 "list"             : ["something", "23.5", false],
                 "nested"           : ["first": ["a": "b"]],
                 "nested_list"      : [["hi"]]

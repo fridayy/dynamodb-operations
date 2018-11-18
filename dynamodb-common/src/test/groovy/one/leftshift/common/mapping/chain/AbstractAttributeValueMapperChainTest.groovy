@@ -10,7 +10,7 @@ abstract class AbstractAttributeValueMapperChainTest extends Specification {
     AttributeValueMaperChain<Object> classUnderTest
 
     @Unroll
-    void "handles assigned type and returns expected value"() {
+    void "handles assigned AttributeValue type and returns expected value"() {
         given:
             AttributeValueMaperChain<Object> mockedNext = Mock(AttributeValueMaperChain)
             classUnderTest = ClassUnderTest(mockedNext)
@@ -20,11 +20,11 @@ abstract class AbstractAttributeValueMapperChainTest extends Specification {
             result == handleableType.getSecond()
             0 * mockedNext.handle(*_)
         where:
-            handleableType << HandleableTypes()
+            handleableType << HandleableAttributeValueTypes()
     }
 
     @Unroll
-    void "delegates other types to next"() {
+    void "delegates other AttributeValue types to next"() {
         given:
             AttributeValueMaperChain<Object> mockedNext = Mock(AttributeValueMaperChain)
             classUnderTest = ClassUnderTest(mockedNext)
@@ -37,7 +37,25 @@ abstract class AbstractAttributeValueMapperChainTest extends Specification {
             forwardType << ForwardTypes()
     }
 
+    @Unroll
+    void "handles assigned Object type and returns expected value"() {
+        given:
+            AttributeValueMaperChain<Object> mockedNext = Mock(AttributeValueMaperChain)
+            classUnderTest = ClassUnderTest(mockedNext)
+        when:
+            def result = classUnderTest.handle(objectType.getFirst())
+        then:
+            result == objectType.getSecond()
+            0 * mockedNext.handle(*_)
+        where:
+            objectType << HandleableObjectTypes()
+    }
+
     abstract AttributeValueMaperChain<Object> ClassUnderTest(AttributeValueMaperChain<Object> next)
+
     abstract List<AttributeValue> ForwardTypes()
-    abstract List<Tuple2<AttributeValue, Object>> HandleableTypes()
+
+    abstract List<Tuple2<AttributeValue, Object>> HandleableAttributeValueTypes()
+
+    abstract List<Tuple2<Object, AttributeValue>> HandleableObjectTypes()
 }

@@ -22,4 +22,12 @@ class StringMapper extends AbstractAttributeValueMapperChain {
             return super.handle(attributeValue);
         }
     }
+
+    @Override
+    public AttributeValue handle(Object object) {
+        if (object instanceof String) {
+            return new AttributeValue().withS((String) object);
+        }
+        return super.handle(object);
+    }
 }

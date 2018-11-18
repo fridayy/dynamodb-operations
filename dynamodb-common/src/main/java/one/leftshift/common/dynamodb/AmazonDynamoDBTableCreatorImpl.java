@@ -1,11 +1,14 @@
 package one.leftshift.common.dynamodb;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.CreateTableResult;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.amazonaws.services.dynamodbv2.waiters.AmazonDynamoDBWaiters;
 import one.leftshift.common.dynamodb.adapter.CreateTableRequestAdapter;
 import one.leftshift.common.dynamodb.exception.TableCreationFailureException;
+
+import java.util.function.Supplier;
 
 /**
  * @author benjamin.krenn@leftshift.one - 11/14/18.
@@ -20,18 +23,18 @@ public class AmazonDynamoDBTableCreatorImpl implements AmazonDynamoDBTableCreato
     }
 
     @Override
-    public CreateTableResult create(String tableName) {
-        return null;
+    public CreateTableResult create(DescribeTableResult anotherTable) {
+        return create(() -> new CreateTableRequestAdapter(anotherTable));
     }
 
     @Override
-    public CreateTableResult create(DescribeTableResult anotherTable) {
+    public CreateTableResult create(Supplier<CreateTableRequest> requestSupplier) {
+        CreateTableRequest request = requestSupplier.get();
         try {
-            CreateTableResult result = this.synchronousDynamoDB.createTable(new CreateTableRequestAdapter(anotherTable));
-            waitFor(anotherTable.getTable().getTableName(), AmazonDynamoDBWaiters::tableExists);
+            CreateTableResult result = this.synchronousDynamoDB.createTable(request);
+            waitFor(request.getTableName(), AmazonDynamoDBWaiters::tableExists);
             return result;
         } catch (Exception e) {
-            log.error("could not create " + anotherTable.getTable().getTableName(), e);
             throw new TableCreationFailureException(e);
         }
     }

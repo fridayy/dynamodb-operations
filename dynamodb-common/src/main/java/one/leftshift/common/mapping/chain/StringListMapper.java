@@ -2,6 +2,7 @@ package one.leftshift.common.mapping.chain;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -21,5 +22,13 @@ class StringListMapper extends AbstractAttributeValueMapperChain {
         } else {
             return super.handle(attributeValue);
         }
+    }
+
+    @Override
+    public AttributeValue handle(Object object) {
+        if (isListOfType(object, String.class)) {
+            return new AttributeValue().withSS((List<String>) object);
+        }
+        return super.handle(object);
     }
 }

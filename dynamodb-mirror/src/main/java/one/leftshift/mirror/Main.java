@@ -14,28 +14,12 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         //@formatter:off
-        List<String> tables = Arrays.asList("GAIA_API_Key",
-                                            "GAIA_Behaviour",
-                                            "GAIA_Billing",
-                                            "GAIA_Channel_Execution",
-                                            "GAIA_Code",
-                                            "GAIA_Conversation",
-                                            "GAIA_Conversation_Context",
-                                            "GAIA_Exception",
-                                            "GAIA_Fulfilment",
-                                            "GAIA_Identity",
-                                            "GAIA_Intent",
-                                            "GAIA_Process_Execution",
-                                            "GAIA_Project_Attributes",
-                                            "GAIA_Prompt",
-                                            "GAIA_Publisher_Evolution",
-                                            "GAIA_Statement",
-                                            "GAIA_Tenant",
-                                            "GAIA_Tenant_Key",
-                                            "GAIA_User");
+        List<String> tables = Arrays.asList(
+                                            "GAIA_Prompt"
+        );
         //@formatter:on
         MirrorRequest request = MirrorRequest.builder()
-                .from(Regions.EU_CENTRAL_1)
+                .from(Regions.EU_WEST_1)
                 .to(Regions.EU_WEST_3)
                 .tableNames(tables).build();
         TableMirroringService tms = new TableMirroringServiceImpl();

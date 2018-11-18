@@ -26,9 +26,20 @@ class ListMapperTest extends AbstractAttributeValueMapperChainTest {
     }
 
     @Override
-    List<Tuple2<AttributeValue, Object>> HandleableTypes() {
+    List<Tuple2<AttributeValue, Object>> HandleableAttributeValueTypes() {
         return [
                 new Tuple2<AttributeValue, Object>(new AttributeValue().withL(new AttributeValue().withS("hi"), new AttributeValue().withN("1")), ["hi", "1"])
+        ]
+    }
+
+    @Override
+    List<Tuple2<Object, AttributeValue>> HandleableObjectTypes() {
+        return [
+                new Tuple2<Object, AttributeValue>([true, true, false], new AttributeValue().withL(
+                        new AttributeValue().withBOOL(true),
+                        new AttributeValue().withBOOL(true),
+                        new AttributeValue().withBOOL(false),
+                ))
         ]
     }
 }

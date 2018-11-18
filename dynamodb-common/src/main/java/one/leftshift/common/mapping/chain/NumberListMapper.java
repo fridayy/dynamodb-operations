@@ -2,6 +2,8 @@ package one.leftshift.common.mapping.chain;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -21,5 +23,14 @@ class NumberListMapper extends AbstractAttributeValueMapperChain {
         } else {
             return super.handle(attributeValue);
         }
+    }
+
+    @Override
+    public AttributeValue handle(Object object) {
+        if (isListOfType(object, Number.class)) {
+            Object[] objects = ((List) object).stream().map(Object::toString).toArray();
+            return new AttributeValue().withNS(Arrays.copyOf(objects, objects.length, String[].class));
+        }
+        return super.handle(object);
     }
 }

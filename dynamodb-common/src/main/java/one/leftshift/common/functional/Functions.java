@@ -1,7 +1,11 @@
 package one.leftshift.common.functional;
 
+import one.leftshift.common.util.ObjectUtil;
+
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author benjamin.krenn@leftshift.one - 10/25/18.
@@ -40,13 +44,28 @@ public final class Functions {
         return Collections.unmodifiableList(new ArrayList<T>(toCopy));
     }
 
+    public static <T> List<T> copy(Collection<T> toCopy) {
+        return Collections.unmodifiableList(new ArrayList<>(toCopy));
+    }
+
     public static <K, T> Map<K, T> copy(Map<K, T> toCopy) {
         return Collections.unmodifiableMap(new HashMap<>(toCopy));
+    }
+
+    public static <T> Collection<List<T>> partition(List<T> list, int partitionSize) {
+        if (partitionSize <= 0) {
+            return Collections.singletonList(list);
+        }
+        AtomicInteger counter = new AtomicInteger(0);
+        return list.stream().collect(Collectors.groupingBy(obj -> counter.getAndIncrement() / partitionSize)).values();
     }
 
     @SafeVarargs
     public static <T> List<T> list(T... items) {
         Objects.requireNonNull(items);
+        if (ObjectUtil.hasNull(items)) {
+            throw new IllegalArgumentException("null values are not allowed");
+        }
         return Arrays.asList(items);
     }
 

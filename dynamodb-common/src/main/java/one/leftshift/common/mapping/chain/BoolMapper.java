@@ -22,4 +22,12 @@ class BoolMapper extends AbstractAttributeValueMapperChain {
             return super.handle(attributeValue);
         }
     }
+
+    @Override
+    public AttributeValue handle(Object object) {
+        if (object instanceof Boolean) {
+            return new AttributeValue().withBOOL((Boolean) object);
+        }
+        return super.handle(object);
+    }
 }

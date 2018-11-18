@@ -22,4 +22,12 @@ class NumberMapper extends AbstractAttributeValueMapperChain {
             return super.handle(attributeValue);
         }
     }
+
+    @Override
+    public AttributeValue handle(Object object) {
+        if (object instanceof Number) {
+            return new AttributeValue().withN(object.toString());
+        }
+        return super.handle(object);
+    }
 }

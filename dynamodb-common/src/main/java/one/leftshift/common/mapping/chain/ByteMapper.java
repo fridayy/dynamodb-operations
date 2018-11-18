@@ -1,12 +1,11 @@
 package one.leftshift.common.mapping.chain;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import org.apache.commons.codec.binary.Base64;
 
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
- * Converts a {@link java.nio.ByteBuffer} to a Base64 encoded string
  * @author benjamin.krenn@leftshift.one - 10/13/18.
  * @since 1.0.0
  */
@@ -19,9 +18,20 @@ class ByteMapper extends AbstractAttributeValueMapperChain {
     @Override
     public Object handle(AttributeValue attributeValue) {
         if (Objects.nonNull(attributeValue.getB())) {
-            return Base64.encodeBase64String(attributeValue.getB().array());
+            return attributeValue.getB().array();
         } else {
             return super.handle(attributeValue);
         }
+    }
+
+    @Override
+    public AttributeValue handle(Object object) {
+        if (object instanceof byte[]) {
+            return new AttributeValue().withB(ByteBuffer.wrap((byte[]) object));
+        }
+        if (object instanceof ByteBuffer) {
+            return new AttributeValue().withB((ByteBuffer) object);
+        }
+        return super.handle(object);
     }
 }

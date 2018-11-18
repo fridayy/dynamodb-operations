@@ -7,5 +7,8 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
  * @since 1.0.0
  */
 public interface AttributeValueMaperChain<T> {
+
     T handle(AttributeValue attributeValue);
+
+    AttributeValue handle(T object);
 }

@@ -1,6 +1,8 @@
 package one.leftshift.mirror.service;
 
 import one.leftshift.common.concurrent.AbstractThreadPoolService;
+import one.leftshift.common.dynamodb.AmazonDynamoDBFactory;
+import one.leftshift.common.dynamodb.repository.SynchronousDynamoDBRepository;
 import one.leftshift.common.util.Tuple;
 import one.leftshift.mirror.MirrorRequest;
 import one.leftshift.mirror.service.task.DefaultMirroringTask;
@@ -27,8 +29,10 @@ public class TableMirroringServiceImpl extends AbstractThreadPoolService impleme
     public void mirror(MirrorRequest mirrorRequest) {
         mirrorRequest.tableNames()
                 .forEach(table -> this.executorService.submit(
-                        new DefaultMirroringTask(MirroringContext.from(Tuple.of(mirrorRequest.from(), mirrorRequest.to()), table))
-                ));
+                        new DefaultMirroringTask(MirroringContext.from(Tuple.of(mirrorRequest.from(), mirrorRequest.to()), table),
+                                new SynchronousDynamoDBRepository(AmazonDynamoDBFactory.synchronous(mirrorRequest.from()), table),
+                                new SynchronousDynamoDBRepository(AmazonDynamoDBFactory.synchronous(mirrorRequest.to()), table)
+                )));
         this.gracefullyShutdownThreadPool();
     }
 }

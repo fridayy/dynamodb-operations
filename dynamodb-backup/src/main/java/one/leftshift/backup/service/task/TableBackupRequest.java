@@ -36,7 +36,7 @@ public class TableBackupRequest {
         return dynamoDBClient;
     }
 
-    public List<Function<Map<String, Object>, Map<String,Object>>> getPreprocessors() {
+    List<Function<Map<String, Object>, Map<String,Object>>> getPreprocessors() {
         return Collections.unmodifiableList(preprocessors);
     }
 
@@ -68,7 +68,7 @@ public class TableBackupRequest {
             return this;
         }
 
-        public BuilderImpl withPreprocessor(Function<Map<String, Object>, Map<String,Object>> preprocessor) {
+        public BuilderImpl withPreprocessor(UnaryOperator<Map<String, Object>> preprocessor) {
             Objects.requireNonNull(dynamoDBClient, "preprocessor can not be null");
             this.preprocessors.add(preprocessor);
             return this;

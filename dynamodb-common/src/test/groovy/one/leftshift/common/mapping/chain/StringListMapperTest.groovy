@@ -26,9 +26,16 @@ class StringListMapperTest extends AbstractAttributeValueMapperChainTest {
     }
 
     @Override
-    List<Tuple2<AttributeValue, Object>> HandleableTypes() {
+    List<Tuple2<AttributeValue, Object>> HandleableAttributeValueTypes() {
         return [
                 new Tuple2<AttributeValue, Object>(new AttributeValue().withSS(["asdasd", " asdasd"]), ["asdasd", " asdasd"])
+        ]
+    }
+
+    @Override
+    List<Tuple2<Object, AttributeValue>> HandleableObjectTypes() {
+        return [
+                new Tuple2<Object, AttributeValue>(Arrays.asList("a","b","c"), new AttributeValue().withSS("a","b","c"))
         ]
     }
 }

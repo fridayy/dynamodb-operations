@@ -16,4 +16,5 @@ public interface DynamoDBRepository<T> {
 
     DescribeTableResult describe();
 
+    void save(Collection<T> items);
 }

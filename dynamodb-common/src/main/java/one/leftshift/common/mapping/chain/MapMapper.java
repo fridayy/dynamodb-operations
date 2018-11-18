@@ -3,6 +3,7 @@ package one.leftshift.common.mapping.chain;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import one.leftshift.common.mapping.AttributeValueMapper;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -18,9 +19,17 @@ class MapMapper extends AbstractAttributeValueMapperChain {
     @Override
     public Object handle(AttributeValue attributeValue) {
         if (Objects.nonNull(attributeValue.getM())) {
-            return AttributeValueMapper.map(attributeValue.getM());
+            return AttributeValueMapper.toMap(attributeValue.getM());
         } else {
             return super.handle(attributeValue);
         }
+    }
+
+    @Override
+    public AttributeValue handle(Object object) {
+        if (object instanceof Map) {
+            return new AttributeValue().withM(AttributeValueMapper.fromMap((Map<String, Object>) object));
+        }
+        return super.handle(object);
     }
 }
