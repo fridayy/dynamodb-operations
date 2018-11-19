@@ -39,14 +39,14 @@ jobs:
         key: v1-dependencies-{{ checksum "build.gradle" }}
 
     # run tests!
-    - run: ./gradlew build
+    - run: gradle build
 
   sonarqube:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
       - checkout
-      - ./gradlew sonarqube \
+      - gradle sonarqube \
         -Dsonar.projectKey=fridayy_dynamodb-operations \
         -Dsonar.organization=fridayy-github \
         -Dsonar.host.url=https://sonarcloud.io \
