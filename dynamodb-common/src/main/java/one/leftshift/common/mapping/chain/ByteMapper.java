@@ -18,7 +18,7 @@ class ByteMapper extends AbstractAttributeValueMapperChain {
     @Override
     public Object handle(AttributeValue attributeValue) {
         if (Objects.nonNull(attributeValue.getB())) {
-            return attributeValue.getB().array();
+            return attributeValue.getB();
         } else {
             return super.handle(attributeValue);
         }

@@ -29,15 +29,16 @@ class ByteListMapperTest extends AbstractAttributeValueMapperChainTest {
     @Override
     List<Tuple2<AttributeValue, Object>> HandleableAttributeValueTypes() {
         return [
-                new Tuple2<AttributeValue, Object>(new AttributeValue().withBS([ByteBuffer.wrap("a".bytes), ByteBuffer.wrap("b".bytes)]), ["YQ==", "Yg=="]),
-                new Tuple2<AttributeValue, Object>(new AttributeValue().withBS([ByteBuffer.wrap("a".bytes)]), ["YQ=="])
+                new Tuple2<AttributeValue, Object>(new AttributeValue().withBS([ByteBuffer.wrap("a".bytes), ByteBuffer.wrap("b".bytes)]), [ByteBuffer.wrap("a".bytes), ByteBuffer.wrap("b".bytes)]),
+                new Tuple2<AttributeValue, Object>(new AttributeValue().withBS([ByteBuffer.wrap("a".bytes)]), [ByteBuffer.wrap("a".bytes)])
         ]
     }
 
     @Override
     List<Tuple2<Object, AttributeValue>> HandleableObjectTypes() {
         return [
-                new Tuple2<Object, AttributeValue>(null, null)
+                new Tuple2<Object, AttributeValue>([ByteBuffer.wrap("a".bytes), ByteBuffer.wrap("b".bytes)], new AttributeValue().withBS([ByteBuffer.wrap("a".bytes), ByteBuffer.wrap("b".bytes)])),
+                new Tuple2<Object, AttributeValue>([ByteBuffer.wrap("a".bytes)], new AttributeValue().withBS([ByteBuffer.wrap("a".bytes)])),
         ]
     }
 }

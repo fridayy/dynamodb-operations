@@ -5,8 +5,6 @@ import spock.lang.Specification
 
 import java.nio.ByteBuffer
 
-import static org.apache.commons.codec.binary.Base64.encodeBase64String
-
 class AttributeValueMapperTest extends Specification {
     void "map returns the expected output"() {
         given:
@@ -36,11 +34,11 @@ class AttributeValueMapperTest extends Specification {
         return [
                 "string_field"     : "stringValue",
                 "bool_field"       : true,
-                "byte_field"       : encodeBase64String("IlikeByteBuffers!".bytes),
+                "byte_field"       : ByteBuffer.wrap("IlikeByteBuffers!".bytes),
                 "number_field"     : "1234.45",
                 "string_list_field": ["first", "second", "third"],
                 "number_list_field": ["1", "2", "3"],
-                "byte_list_field"  : [encodeBase64String("firstBuffer".bytes), encodeBase64String("secondBuffer".bytes)],
+                "byte_list_field"  : [ByteBuffer.wrap("firstBuffer".bytes), ByteBuffer.wrap("secondBuffer".bytes)],
                 "toMap"              : ["Name": "John"],
                 "list"             : ["something", "23.5", false],
                 "nested"           : ["first": ["a": "b"]],
