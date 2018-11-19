@@ -46,7 +46,7 @@ jobs:
       - image: circleci/openjdk:8-jdk
     steps:
       - checkout
-    - run: gradle sonarqube -Dsonar.projectKey=fridayy_dynamodb-operations -Dsonar.organization=fridayy-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=e6c1b0199cddacb4b5be42d2f74d89c7da07ab32
+      - run: gradle sonarqube -Dsonar.projectKey=fridayy_dynamodb-operations -Dsonar.organization=fridayy-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=e6c1b0199cddacb4b5be42d2f74d89c7da07ab32
 workflows:
   version: 2
   run_analysis:
