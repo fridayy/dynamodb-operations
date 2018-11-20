@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public final class Maps {
 
-    public Maps() {
+    private Maps() {
         throw new UnsupportedOperationException("Can not instantiate");
     }
 
