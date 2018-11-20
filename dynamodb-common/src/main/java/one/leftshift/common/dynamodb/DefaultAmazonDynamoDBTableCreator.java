@@ -14,11 +14,11 @@ import java.util.function.Supplier;
  * @author benjamin.krenn@leftshift.one - 11/14/18.
  * @since 1.0.0
  */
-public class AmazonDynamoDBTableCreatorImpl implements AmazonDynamoDBTableCreator {
+public class DefaultAmazonDynamoDBTableCreator implements AmazonDynamoDBTableCreator {
 
     private final AmazonDynamoDB synchronousDynamoDB;
 
-    public AmazonDynamoDBTableCreatorImpl(AmazonDynamoDB synchronousDynamoDB) {
+    public DefaultAmazonDynamoDBTableCreator(AmazonDynamoDB synchronousDynamoDB) {
         this.synchronousDynamoDB = synchronousDynamoDB;
     }
 

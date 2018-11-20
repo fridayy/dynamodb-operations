@@ -3,7 +3,7 @@ package one.leftshift.mirror.service.task;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import one.leftshift.common.dynamodb.AmazonDynamoDBFactory;
 import one.leftshift.common.dynamodb.AmazonDynamoDBTableCreator;
-import one.leftshift.common.dynamodb.AmazonDynamoDBTableCreatorImpl;
+import one.leftshift.common.dynamodb.DefaultAmazonDynamoDBTableCreator;
 import one.leftshift.common.dynamodb.repository.DynamoDBRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class DefaultMirroringTask implements Runnable {
     @Override
     public void run() {
         log.info("mirroring {} from {} to {}", this.context.getTableName(), this.context.getFrom().getName(), this.context.getTo().getName());
-        AmazonDynamoDBTableCreator creator = new AmazonDynamoDBTableCreatorImpl(AmazonDynamoDBFactory.synchronous(this.context.getTo()));
+        AmazonDynamoDBTableCreator creator = new DefaultAmazonDynamoDBTableCreator(AmazonDynamoDBFactory.synchronous(this.context.getTo()));
         log.info("Describing source table {} in source region {}", this.context.getTableName(), this.context.getFrom().getName());
         DescribeTableResult sourceTable = fromRepository.describe();
         log.info("Deleting table {} in target region {}", this.context.getTableName(), this.context.getTo().getName());

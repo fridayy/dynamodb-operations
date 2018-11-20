@@ -15,13 +15,13 @@ import java.util.concurrent.Executors;
  * @author benjamin.krenn@leftshift.one - 10/17/18.
  * @since 1.0.0
  */
-public class TableMirroringServiceImpl extends AbstractThreadPoolService implements TableMirroringService {
+public class DefaultTableMirroringService extends AbstractThreadPoolService implements TableMirroringService {
 
-    public TableMirroringServiceImpl(ExecutorService executorService) {
+    public DefaultTableMirroringService(ExecutorService executorService) {
         super(executorService);
     }
 
-    public TableMirroringServiceImpl() {
+    public DefaultTableMirroringService() {
         super(Executors.newFixedThreadPool(5));
     }
 

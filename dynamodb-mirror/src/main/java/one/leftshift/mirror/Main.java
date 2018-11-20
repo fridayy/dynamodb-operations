@@ -2,7 +2,7 @@ package one.leftshift.mirror;
 
 import com.amazonaws.regions.Regions;
 import one.leftshift.mirror.service.TableMirroringService;
-import one.leftshift.mirror.service.TableMirroringServiceImpl;
+import one.leftshift.mirror.service.DefaultTableMirroringService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +22,7 @@ public class Main {
                 .from(Regions.EU_WEST_1)
                 .to(Regions.EU_WEST_3)
                 .tableNames(tables).build();
-        TableMirroringService tms = new TableMirroringServiceImpl();
+        TableMirroringService tms = new DefaultTableMirroringService();
         tms.mirror(request);
     }
 }
