@@ -27,7 +27,7 @@ class SynchronousDynamoDBRepositoryTest extends Specification {
         classUnderTest = new SynchronousDynamoDBRepository(mockedAmazonDynamoDB, "xyx")
     }
 
-    void "returns an empty list if tableName is invalid"() {
+    void "findAll() returns an empty list if tableName is invalid"() {
         given:
             mockedAmazonDynamoDB.scan(_) >> { throw new ResourceNotFoundException() }
         when:
@@ -36,7 +36,7 @@ class SynchronousDynamoDBRepositoryTest extends Specification {
             result == []
     }
 
-    void "returns expected datastructure"() {
+    void "findAll() returns expected datastructure"() {
         given:
             mockedAmazonDynamoDB.scan(_) >> new ScanResult()
                     .withItems([["id": new AttributeValue().withS("x6ds5x")], ["name": new AttributeValue().withS("test")]])
@@ -49,7 +49,7 @@ class SynchronousDynamoDBRepositoryTest extends Specification {
             ]
     }
 
-    void "save invokes batchWrite with expected values"() {
+    void "save() invokes batchWrite with expected values"() {
         when:
             classUnderTest.save([
                     ["partitionKey": "1337", "sortingKey": "7331", "data": [0x1] as byte[]],
@@ -70,5 +70,9 @@ class SynchronousDynamoDBRepositoryTest extends Specification {
                                 "data"        : new AttributeValue().withB(ByteBuffer.wrap([0x3] as byte[]))
                         ]))]
             } as Map<String, List<WriteRequest>>)
+    }
+
+    void "delete() invokes delete and waits for deletion to finish"() {
+
     }
 }

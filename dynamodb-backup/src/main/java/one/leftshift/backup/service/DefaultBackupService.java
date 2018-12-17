@@ -13,16 +13,16 @@ import java.util.concurrent.Executors;
  * @author benjamin.krenn@leftshift.one - 10/16/18.
  * @since 1.0.0
  */
-public class ThreadPoolBackupService extends AbstractThreadPoolService implements BackupService {
+public class DefaultBackupService extends AbstractThreadPoolService implements BackupService {
 
     private final AmazonDynamoDB dynamoDBClient;
 
-    public ThreadPoolBackupService(AmazonDynamoDB dynamoDBClient, ExecutorService executorService) {
+    public DefaultBackupService(AmazonDynamoDB dynamoDBClient, ExecutorService executorService) {
         super(executorService);
         this.dynamoDBClient = dynamoDBClient;
     }
 
-    public ThreadPoolBackupService(AmazonDynamoDB dynamoDBClient) {
+    public DefaultBackupService(AmazonDynamoDB dynamoDBClient) {
         super(Executors.newFixedThreadPool(8));
         this.dynamoDBClient = dynamoDBClient;
     }

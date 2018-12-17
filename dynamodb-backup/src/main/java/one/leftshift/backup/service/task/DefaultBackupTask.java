@@ -1,9 +1,9 @@
 package one.leftshift.backup.service.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import one.leftshift.common.dynamodb.repository.DynamoDBRepository;
 import one.leftshift.common.dynamodb.repository.SynchronousDynamoDBRepository;
 import one.leftshift.common.functional.Functions;
-import one.leftshift.common.dynamodb.repository.DynamoDBRepository;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +37,16 @@ public class DefaultBackupTask implements Runnable {
     public void run() {
         try {
             Collection<Map<String, Object>> items = this.repository.findAll();
-            List<Map<String,Object>> preproccessedItems = items.stream()
+            List<Map<String, Object>> preproccessedItems = items.stream()
                     .map(Functions.collapse(backupRequest.getPreprocessors()))
                     .collect(Collectors.toList());
-            IOUtils.write(this.objectMapper.writeValueAsBytes(preproccessedItems),
-                    new FileOutputStream(new File(this.backupRequest.getInitialRequest().backupDestination().getPath().resolve(this.backupRequest.getTableName() + ".json"))));
+            IOUtils.write(
+                    this.objectMapper.writeValueAsBytes(preproccessedItems),
+                    new FileOutputStream(
+                            new File(this.backupRequest.getInitialRequest()
+                                    .backupDestination()
+                                    .getPath()
+                                    .resolve(this.backupRequest.getTableName() + ".json"))));
         } catch (IOException e) {
             log.error("Could not write to file", e);
         }
